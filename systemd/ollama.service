@@ -1,0 +1,26 @@
+[Unit]
+Description=Ollama local LLM inference server
+# Serves local language models (e.g. Qwen2.5-Coder-7B) via the GPU.
+# Listens on localhost:11434 only — not exposed to LAN.
+# AI sandbox VMs connect via port-forwarding.
+Documentation=https://github.com/ollama/ollama
+After=network.target
+
+[Service]
+Type=simple
+User=ollama
+Group=ollama
+ExecStart=/usr/local/bin/ollama serve
+Environment="OLLAMA_HOST=127.0.0.1:11434"
+Environment="OLLAMA_MODELS=/var/lib/ollama/models"
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
